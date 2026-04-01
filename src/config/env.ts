@@ -9,10 +9,13 @@ export const config = {
   TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN || '',
   DEEPGRAM_API_KEY: process.env.DEEPGRAM_API_KEY || '',
   ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY || '',
+  GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
+  GROQ_API_KEY: process.env.GROQ_API_KEY || '',
   ELEVENLABS_API_KEY: process.env.ELEVENLABS_API_KEY || '',
   ELEVENLABS_VOICE_ID: process.env.ELEVENLABS_VOICE_ID || 'pNInz6obbfIdV3Q9',
   REDIS_URL: process.env.REDIS_URL || 'redis://localhost:6379',
-  DATABASE_URL: process.env.DATABASE_URL || 'postgres://postgres:postgres@localhost:5432/aicaller'
+  DATABASE_URL: process.env.DATABASE_URL || 'postgres://postgres:postgres@localhost:5432/aicaller',
+  TUNNEL_URL: process.env.TUNNEL_URL || ''
 };
 
 const requiredKeys = ['TWILIO_ACCOUNT_SID', 'TWILIO_AUTH_TOKEN', 'DEEPGRAM_API_KEY', 'ANTHROPIC_API_KEY', 'ELEVENLABS_API_KEY'];

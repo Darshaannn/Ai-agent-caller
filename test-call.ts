@@ -7,7 +7,7 @@ const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TO
 async function makeTestCall() {
     try {
         const call = await client.calls.create({
-            url: 'https://51760ff1c78333.lhr.life/twilio/incoming',
+            url: `${process.env.TUNNEL_URL}/twilio/incoming`,
             to: '+917400274288', // REPLACE THIS with your Verified Indian Phone Number
             from: '+12602702197'
         });

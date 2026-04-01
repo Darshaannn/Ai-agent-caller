@@ -11,6 +11,10 @@ export class ElevenLabsTTS extends EventEmitter {
     this.voiceId = config.ELEVENLABS_VOICE_ID;
   }
 
+  public get readyState() {
+    return this.ws ? this.ws.readyState : WebSocket.CLOSED;
+  }
+
   public connect() {
     // Request ulaw_8000 format so it can be streamed directly to Twilio Media Streams natively
     const url = `wss://api.elevenlabs.io/v1/text-to-speech/${this.voiceId}/stream-input?model_id=eleven_turbo_v2&output_format=ulaw_8000`;
@@ -26,24 +30,24 @@ export class ElevenLabsTTS extends EventEmitter {
       // Send initial configuration frame
       this.ws?.send(JSON.stringify({
         text: " ",
-        voice_settings: { stability: 0.5, similarity_boost: 0.8 },
-        try_trigger_generation: true
+        voice_settings: { stability: 0.5, similarity_boost: 0.8 }
       }));
+      this.emit('ready');
     });
 
     this.ws.on('message', (data: WebSocket.Data) => {
       const response = JSON.parse(data.toString());
       if (response.audio) {
-        // audio payload is base64 encoded ulaw_8000 string
         this.emit('audio', response.audio);
       }
-      if (response.isFinal) {
+      // ElevenLabs WS API sometimes uses is_final instead of isFinal
+      if (response.is_final || response.isFinal) {
         this.emit('done');
       }
     });
 
-    this.ws.on('close', () => {
-      console.log('[ElevenLabs] TTS WebSocket disconnected');
+    this.ws.on('close', (code, reason) => {
+      console.log(`[ElevenLabs] TTS WebSocket disconnected. Code: ${code}, Reason: ${reason}`);
     });
 
     this.ws.on('error', (error) => {

@@ -15,12 +15,12 @@ export class DeepgramSTT extends EventEmitter {
   public start() {
     this.liveClient = this.deepgram.listen.live({
       model: 'nova-2',
-      language: 'multi', // Supporting Hindi and English explicitly as per Phase 3
+      language: 'en-IN',
       encoding: 'mulaw',
       sample_rate: 8000,
       channels: 1,
       interim_results: true,
-      endpointing: 200 // 200ms silence detection for VAD as specified in PDF
+      endpointing: 150 // Reduced from 200ms for faster turn-taking
     });
 
     this.liveClient.on(LiveTranscriptionEvents.Open, () => {
@@ -56,7 +56,7 @@ export class DeepgramSTT extends EventEmitter {
   public pushAudio(payloadBase64: string) {
     if (this.isReady && this.liveClient) {
       const buffer = Buffer.from(payloadBase64, 'base64');
-      this.liveClient.send(buffer);
+      this.liveClient.send(buffer as any);
     }
   }
 
